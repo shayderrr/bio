@@ -1,1 +1,1014 @@
-hi
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>shayder</title>
+<meta name="description" content="shayder: c++, c#, js, cs2 and winter.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#07070d">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta property="og:type" content="website">
+<meta property="og:title" content="shayder">
+<meta property="og:description" content="c++, c#, js, cs2 and winter.">
+<!-- crawlers don't run JS, so these two URLs are static: keep them in step with REF in the script below -->
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/shayderrr/bio@main/pfp.gif">
+<link rel="icon" type="image/gif" href="https://cdn.jsdelivr.net/gh/shayderrr/bio@main/pfp.gif">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://cdn.jsdelivr.net/npm/@fontsource-variable/onest@5.3.1/files/onest-latin-wght-normal.woff2">
+<style>
+@font-face {
+  font-family: "Onest Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("https://cdn.jsdelivr.net/npm/@fontsource-variable/onest@5.3.1/files/onest-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: dark;
+  --night: #07070d;
+  --frost: #f4f6ff;
+  --mist: rgba(236, 240, 255, .86);
+  --haze: rgba(232, 238, 255, .76);
+  --line: rgba(255, 255, 255, .11);
+  --glow: 168, 85, 247;
+  --link: #9bcaff;
+  --gap: 16px;
+  --banner-h: 172px;
+  --avatar: 108px;
+  --player-h: 88px;
+  --font: "Onest Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .3 -.12'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23f)'/%3E%3C/svg%3E");
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { background: var(--night); -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: var(--frost);
+  font: 400 15.5px/1.55 var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: rgba(var(--glow), .45); }
+:focus-visible { outline: 2px solid var(--frost); outline-offset: 3px; }
+
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: radial-gradient(120% 100% at 50% 0%, #1c1e2f, var(--night) 72%);
+}
+.shade {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(130% 100% at 50% 45%, rgba(7, 7, 13, .15), rgba(7, 7, 13, .72)),
+    rgba(7, 7, 13, .3);
+}
+
+.page {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 560px;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: var(--gap);
+  padding:
+    max(var(--gap), env(safe-area-inset-top))
+    max(var(--gap), env(safe-area-inset-right))
+    max(var(--gap), env(safe-area-inset-bottom))
+    max(var(--gap), env(safe-area-inset-left));
+}
+.stage {
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* glass */
+.glass {
+  position: relative;
+  isolation: isolate;
+  background:
+    var(--grain),
+    linear-gradient(155deg, rgba(255, 255, 255, .11) 0%, rgba(255, 255, 255, .03) 38%, rgba(255, 255, 255, .015) 62%, rgba(176, 120, 255, .09) 100%),
+    rgba(10, 12, 22, .54);
+  /* brightness() darkens only what sits behind the glass, so bright snow can't wash the text out */
+  -webkit-backdrop-filter: blur(24px) saturate(140%) brightness(.78);
+  backdrop-filter: blur(24px) saturate(140%) brightness(.78);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .26),
+    inset 0 0 40px rgba(255, 255, 255, .035),
+    0 28px 70px -14px rgba(0, 0, 0, .6),
+    0 0 56px rgba(var(--glow), .3),
+    0 0 140px rgba(var(--glow), .16);
+}
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  padding: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(140deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, .08) 28%, rgba(255, 255, 255, 0) 56%, rgba(var(--glow), .55));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .glass { background-color: rgba(14, 15, 24, .88); }
+}
+
+/* profile card */
+.card {
+  width: min(440px, 100%);
+  height: min(720px, 100%);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 30px;
+}
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .35s;
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, .13), rgba(255, 255, 255, 0) 70%);
+}
+.card.is-lit::after { opacity: 1; }
+
+.scroll {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, .3) transparent;
+}
+.scroll::-webkit-scrollbar { width: 8px; }
+.scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, .28);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background-clip: padding-box;
+}
+.scroll[data-more="true"] {
+  -webkit-mask-image: linear-gradient(#000 calc(100% - 44px), transparent);
+  mask-image: linear-gradient(#000 calc(100% - 44px), transparent);
+}
+.scroll:focus-visible { outline-offset: -3px; }
+
+.head { position: relative; }
+.banner {
+  height: var(--banner-h);
+  overflow: hidden;
+  background: linear-gradient(135deg, #1d1f33, #0c0c16);
+}
+.banner img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0;
+}
+.banner::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--banner-h) - 70px);
+  height: 70px;
+  background: linear-gradient(transparent, rgba(12, 13, 22, .55));
+  pointer-events: none;
+}
+.avatar {
+  position: absolute;
+  left: 22px;
+  top: calc(var(--banner-h) - var(--avatar) / 2);
+  width: var(--avatar);
+  height: var(--avatar);
+  overflow: hidden;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2a2c44, #11121c);
+  box-shadow:
+    0 0 0 5px rgba(12, 13, 22, .82),
+    0 0 0 6px rgba(255, 255, 255, .22),
+    0 0 30px rgba(var(--glow), .65);
+}
+.avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
+img.is-missing { visibility: hidden; }
+
+.who {
+  min-height: calc(var(--avatar) / 2 + 14px);
+  padding: 10px 22px 0 calc(22px + var(--avatar) + 16px);
+}
+.who h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -.02em;
+}
+.handle { margin: 4px 0 0; color: var(--mist); font-size: .9rem; }
+
+.sec { padding: 16px 22px 18px; border-top: 1px solid var(--line); }
+.sec h2 {
+  margin: 0 0 8px;
+  color: var(--haze);
+  font-size: .82rem;
+  font-weight: 620;
+  letter-spacing: .03em;
+}
+.sec p { margin: 0; }
+.sec p + p { margin-top: 10px; }
+.hello { margin-bottom: 4px !important; font-size: 1.06rem; font-weight: 620; }
+
+.media { display: grid; gap: 3px; margin: 0; padding: 0; list-style: none; }
+.media li { position: relative; padding-left: 18px; }
+.media li::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: .72em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgb(var(--glow));
+  box-shadow: 0 0 9px rgba(var(--glow), .9);
+}
+
+.chip {
+  display: inline-block;
+  margin: 0 1px;
+  padding: 1px 13px 2px;
+  border: 1px solid rgba(110, 170, 255, .45);
+  border-radius: 999px;
+  color: #a6d0ff;
+  background: rgba(70, 140, 255, .17);
+  font-weight: 580;
+  text-decoration: none;
+  transition: background .2s, box-shadow .2s, color .2s, transform .2s;
+}
+.chip:hover {
+  color: #d6e9ff;
+  background: rgba(70, 140, 255, .3);
+  box-shadow: 0 0 20px rgba(80, 150, 255, .55);
+  transform: translateY(-1px);
+}
+.mail {
+  color: var(--link);
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-decoration-color: rgba(121, 184, 255, .4);
+  text-underline-offset: 3px;
+  transition: color .2s, text-decoration-color .2s;
+}
+.mail:hover { color: #b9dbff; text-decoration-color: currentColor; }
+
+.socials {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  padding: 14px 22px 16px;
+  border-top: 1px solid var(--line);
+  background: rgba(255, 255, 255, .03);
+}
+.social {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(255, 255, 255, .17);
+  border-radius: 50%;
+  color: var(--frost);
+  background: rgba(255, 255, 255, .07);
+  transition: transform .2s, background .2s, box-shadow .2s;
+}
+.social svg { width: 22px; height: 22px; fill: currentColor; }
+.social:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, .15);
+  box-shadow: 0 0 24px rgba(var(--glow), .65);
+}
+
+/* player */
+.player {
+  justify-self: center;
+  width: min(600px, 100%);
+  height: var(--player-h);
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    "cover meta play vol"
+    "cover seek play vol";
+  align-items: center;
+  align-content: center;
+  column-gap: 14px;
+  row-gap: 2px;
+  border-radius: 24px;
+}
+.cover {
+  grid-area: cover;
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 14px;
+  background: #1a1b2b;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .2), 0 6px 18px rgba(0, 0, 0, .5);
+  transition: box-shadow .4s;
+}
+.player.is-playing .cover {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .3), 0 0 26px rgba(var(--glow), .75);
+}
+.meta { grid-area: meta; min-width: 0; align-self: end; }
+.track, .artist {
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.track { font-size: .95rem; font-weight: 620; line-height: 1.25; }
+.artist { color: var(--mist); font-size: .82rem; line-height: 1.3; }
+
+.play {
+  grid-area: play;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: #0a0a12;
+  background: var(--frost);
+  box-shadow: 0 0 22px rgba(var(--glow), .55);
+  cursor: pointer;
+  transition: transform .15s, box-shadow .2s;
+}
+.play:hover { transform: scale(1.06); box-shadow: 0 0 32px rgba(var(--glow), .9); }
+.play:active { transform: scale(.97); }
+.play svg { width: 20px; height: 20px; fill: currentColor; stroke: currentColor; stroke-width: 1.6; stroke-linejoin: round; }
+.play .i-pause { display: none; }
+.player.is-playing .i-play { display: none; }
+.player.is-playing .i-pause { display: block; }
+.player.is-busy .play { animation: pulse 1s ease-in-out infinite; }
+
+.row2 { display: contents; }
+.seek {
+  grid-area: seek;
+  min-width: 0;
+  align-self: start;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--haze);
+  font-size: .72rem;
+  font-variant-numeric: tabular-nums;
+}
+.seek span { flex: none; min-width: 2.2em; }
+.seek span:last-child { text-align: right; }
+.seek input { flex: 1 1 auto; min-width: 0; }
+
+.vol { grid-area: vol; display: flex; align-items: center; gap: 6px; }
+.vol input { width: 96px; }
+.mute {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--frost);
+  background: transparent;
+  cursor: pointer;
+  transition: background .2s;
+}
+.mute:hover { background: rgba(255, 255, 255, .12); }
+.mute svg { width: 22px; height: 22px; }
+.mute .body { fill: currentColor; }
+.mute .wave { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.mute .wave, .mute .cross { display: none; }
+.mute .cross { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.vol[data-level="0"] .cross { display: block; }
+.vol[data-level="1"] .w1,
+.vol[data-level="2"] .w1,
+.vol[data-level="2"] .w2 { display: block; }
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 18px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  --fill: 0%;
+}
+input[type="range"]:disabled { opacity: .45; cursor: default; }
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--frost) var(--fill), rgba(255, 255, 255, .22) var(--fill));
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -5px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--frost);
+  box-shadow: 0 0 10px rgba(var(--glow), .85);
+}
+input[type="range"]::-moz-range-track { height: 4px; border-radius: 2px; background: rgba(255, 255, 255, .22); }
+input[type="range"]::-moz-range-progress { height: 4px; border-radius: 2px; background: var(--frost); }
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--frost);
+  box-shadow: 0 0 10px rgba(var(--glow), .85);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.loading {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  background: var(--night);
+  color: var(--mist);
+  font-size: 1.05rem;
+  transition: opacity .5s, visibility .5s;
+}
+.loading span { animation: breathe 1.6s ease-in-out infinite; }
+.ready .loading { opacity: 0; visibility: hidden; }
+.ready .card { animation: rise .7s cubic-bezier(.2, .7, .2, 1) both; }
+.ready .player { animation: rise .7s .08s cubic-bezier(.2, .7, .2, 1) both; }
+
+@keyframes breathe { 50% { opacity: .4; } }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } }
+@keyframes pulse { 50% { box-shadow: 0 0 40px rgba(var(--glow), 1); } }
+
+@media (max-height: 700px) { :root { --banner-h: 128px; } }
+
+@media (max-width: 560px) {
+  :root { --banner-h: 132px; --avatar: 88px; --player-h: 120px; }
+  body { font-size: 15px; }
+  .who { padding-left: calc(22px + var(--avatar) + 14px); }
+  .who h1 { font-size: 1.55rem; }
+  .player {
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+    grid-template-areas:
+      "cover meta play"
+      "row row row";
+    row-gap: 10px;
+    column-gap: 12px;
+  }
+  .cover { width: 56px; height: 56px; border-radius: 12px; }
+  .meta { align-self: center; }
+  .play { width: 44px; height: 44px; }
+  .row2 { grid-area: row; display: flex; align-items: center; gap: 10px; }
+  .seek { flex: 1 1 auto; align-self: center; }
+  .vol input { width: 64px; }
+}
+
+@media (max-width: 560px) and (max-height: 700px) { :root { --banner-h: 108px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+<video id="bg" class="bg" data-asset="background.mp4" autoplay muted loop playsinline preload="auto" disablepictureinpicture disableremoteplayback aria-hidden="true" tabindex="-1"></video>
+<div class="shade" aria-hidden="true"></div>
+<div class="loading" id="loading" role="status"><span>loading...</span></div>
+
+<div class="page" id="page" inert>
+  <main class="stage">
+    <article class="card glass" id="card" aria-label="Profile">
+      <section class="scroll" id="scroll" tabindex="0" aria-label="Profile details">
+        <header class="head">
+          <div class="banner"><img data-asset="banner.gif" alt="" width="640" height="426" decoding="async"></div>
+          <div class="avatar"><img data-asset="pfp.gif" alt="shayder's profile picture" width="300" height="300" decoding="async"></div>
+          <div class="who">
+            <h1>shayder</h1>
+            <p class="handle">shayderrr</p>
+          </div>
+        </header>
+
+        <section class="sec">
+          <h2>about me</h2>
+          <p class="hello">hey, i'm shayder</p>
+          <p>i like c++, c#, and js<br>also like cs2, main game<br>used to play roblox, loved notoriety &amp; bloodtide<br>love winter</p>
+        </section>
+
+        <section class="sec">
+          <h2>fav media</h2>
+          <ul class="media">
+            <li>fight club</li>
+            <li>you</li>
+            <li>breaking bad &amp; bcs</li>
+            <li>memento</li>
+          </ul>
+        </section>
+
+        <section class="sec">
+          <h2>more</h2>
+          <p>i made <a class="chip" href="https://wasm.rip" target="_blank" rel="noopener noreferrer">wasm.rip</a></p>
+          <p>got any questions? contact me at <a class="mail" href="mailto:darknessshayder@gmail.com">darknessshayder@gmail.com</a></p>
+        </section>
+      </section>
+
+      <footer class="socials">
+        <a class="social" href="https://github.com/shayderrr" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        </a>
+        <a class="social" href="https://steamcommunity.com/profiles/76561199520826319/" target="_blank" rel="noopener noreferrer" aria-label="Steam" title="Steam">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012H7.54zm11.415-9.303c0-1.662-1.353-3.015-3.015-3.015-1.665 0-3.015 1.353-3.015 3.015 0 1.665 1.35 3.015 3.015 3.015 1.663 0 3.015-1.35 3.015-3.015zm-5.273-.005c0-1.252 1.013-2.266 2.265-2.266 1.249 0 2.266 1.014 2.266 2.266 0 1.251-1.017 2.265-2.266 2.265-1.253 0-2.265-1.014-2.265-2.265z"/></svg>
+        </a>
+        <a class="social" href="https://discord.com/users/1090734561006198814" target="_blank" rel="noopener noreferrer" aria-label="Discord" title="Discord">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+        </a>
+      </footer>
+    </article>
+  </main>
+
+  <section class="player glass" id="player" aria-label="Music player">
+    <img class="cover" data-asset="music.png" alt="Album cover" width="64" height="64" decoding="async">
+    <div class="meta">
+      <p class="track" id="track">starry breakcore mix</p>
+      <p class="artist" id="artist">masen</p>
+    </div>
+    <button class="play" id="play" type="button" aria-label="Play">
+      <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+      <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+    </button>
+    <div class="row2">
+      <div class="seek">
+        <span id="cur">0:00</span>
+        <input id="seek" type="range" min="0" max="0" step="1" value="0" disabled aria-label="Seek">
+        <span id="dur">--:--</span>
+      </div>
+      <div class="vol" id="vol" data-level="2">
+        <button class="mute" id="mute" type="button" aria-label="Mute">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path class="body" d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/>
+            <path class="wave w1" d="M15.2 9.2a4 4 0 0 1 0 5.6"/>
+            <path class="wave w2" d="M17.8 6.6a8 8 0 0 1 0 10.8"/>
+            <path class="cross" d="M16 9.5l5 5M21 9.5l-5 5"/>
+          </svg>
+        </button>
+        <input id="volume" type="range" min="0" max="100" step="1" value="60" aria-label="Volume">
+      </div>
+    </div>
+    <p class="sr-only" id="live" role="status"></p>
+  </section>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  // REF can be a branch, tag or commit hash. A commit hash never goes stale on the CDNs.
+  const REPO = 'shayderrr/bio';
+  const REF = 'main';
+  const MIRRORS = [
+    (file) => `https://cdn.jsdelivr.net/gh/${REPO}@${REF}/${file}`,
+    (file) => `https://raw.githack.com/${REPO}/${REF}/${file}`,
+  ];
+
+  // The music lives in another repo. Nothing is requested until play is pressed.
+  const MUSIC_URL = 'https://raw.githack.com/shayderrr/profile/main/starry%20breakcore%20mix%20%5B2i9vG5ZtK3c%5D.mp3';
+  const MUSIC_MIME = 'audio/mpeg';
+  // 2.4 MB is at least 60 s of audio at 320 kbps, and more at lower bitrates.
+  const FIRST_CHUNK_BYTES = 2_400_000;
+  // Playing this on the click unlocks the element for iOS/Safari, which only allow
+  // play() inside a gesture; the real source is swapped in once it has downloaded.
+  const SILENT_WAV = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+
+  const DEFAULT_VOLUME = 60;
+  const LOADING_TIMEOUT_MS = 20000;
+  const STORE_KEY = 'bio:player';
+  const MSG_LOADING = 'loading music...';
+  const MSG_FAILED = "couldn't load the music, press play to retry";
+
+  const $ = (id) => document.getElementById(id);
+  const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
+
+  /* assets: first mirror, then the next one if it fails. The loading screen waits on all of them. */
+
+  const bg = $('bg');
+  const mirrorOf = new WeakMap();
+
+  function useMirror(el, index) {
+    mirrorOf.set(el, index);
+    el.src = MIRRORS[index](el.dataset.asset);
+  }
+
+  function loadAsset(el) {
+    return new Promise((resolve) => {
+      el.addEventListener(el === bg ? 'loadeddata' : 'load', resolve, { once: true });
+      el.addEventListener('error', () => {
+        const next = mirrorOf.get(el) + 1;
+        if (next < MIRRORS.length) {
+          useMirror(el, next);
+        } else {
+          el.classList.add('is-missing');
+          resolve();
+        }
+      });
+      useMirror(el, 0);
+    });
+  }
+
+  const loading = [...document.querySelectorAll('[data-asset]')].map(loadAsset);
+  loading.push(
+    document.fonts
+      ? document.fonts.load('400 1em "Onest Variable"').catch(() => {})
+      : Promise.resolve()
+  );
+
+  function showPage() {
+    $('page').inert = false;
+    document.documentElement.classList.add('ready');
+    updateScrollHint();
+  }
+
+  // The timeout only matters if a request hangs without ever failing.
+  Promise.race([
+    Promise.all(loading),
+    new Promise((resolve) => setTimeout(resolve, LOADING_TIMEOUT_MS)),
+  ]).then(showPage);
+
+  /* background video */
+
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+  function playBackground() {
+    if (reduceMotion.matches || document.hidden) return;
+    // autoplay can be refused (battery saver, data saver); the gradient behind it stays
+    bg.play().catch(() => {});
+  }
+
+  bg.addEventListener('loadeddata', () => (reduceMotion.matches ? bg.pause() : playBackground()));
+  reduceMotion.addEventListener('change', () => (reduceMotion.matches ? bg.pause() : playBackground()));
+  document.addEventListener('visibilitychange', () => (document.hidden ? bg.pause() : playBackground()));
+
+  /* card: scroll hint and pointer light */
+
+  const card = $('card');
+  const scroller = $('scroll');
+
+  function updateScrollHint() {
+    scroller.dataset.more = String(scroller.scrollTop + scroller.clientHeight < scroller.scrollHeight - 2);
+  }
+  scroller.addEventListener('scroll', updateScrollHint, { passive: true });
+  new ResizeObserver(updateScrollHint).observe(scroller);
+
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    let frame = 0;
+    card.addEventListener('pointermove', (e) => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const box = card.getBoundingClientRect();
+        card.style.setProperty('--mx', `${e.clientX - box.left}px`);
+        card.style.setProperty('--my', `${e.clientY - box.top}px`);
+      });
+    });
+    card.addEventListener('pointerenter', () => !reduceMotion.matches && card.classList.add('is-lit'));
+    card.addEventListener('pointerleave', () => card.classList.remove('is-lit'));
+  }
+
+  /* music player */
+
+  const ui = {
+    root: $('player'),
+    play: $('play'),
+    mute: $('mute'),
+    seek: $('seek'),
+    volume: $('volume'),
+    vol: $('vol'),
+    cur: $('cur'),
+    dur: $('dur'),
+    artist: $('artist'),
+    live: $('live'),
+  };
+
+  const audio = new Audio();
+  audio.preload = 'none';
+
+  // idle -> loading -> partial (first minute playing) -> full; native is the plain-streaming fallback
+  let phase = 'idle';
+  let intent = false; // the listener wants sound
+  let seeking = false;
+  let splicing = false;
+  let hasStatus = false;
+  let blobUrl = '';
+  const shown = { artist: ui.artist.textContent };
+
+  function loadPrefs() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+      return {
+        volume: Number.isFinite(raw.volume) ? clamp(raw.volume, 0, 100) : DEFAULT_VOLUME,
+        muted: raw.muted === true,
+      };
+    } catch {
+      return { volume: DEFAULT_VOLUME, muted: false };
+    }
+  }
+
+  let { volume, muted } = loadPrefs();
+
+  function savePrefs() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify({ volume, muted }));
+    } catch {
+      // storage is blocked in some private modes; the setting just won't persist
+    }
+  }
+
+  function fmt(total) {
+    const s = Math.max(0, Math.floor(total));
+    const h = Math.floor(s / 3600);
+    const m = Math.floor((s % 3600) / 60);
+    const sec = String(s % 60).padStart(2, '0');
+    return h ? `${h}:${String(m).padStart(2, '0')}:${sec}` : `${m}:${sec}`;
+  }
+
+  function paintFill(input) {
+    const span = Number(input.max) - Number(input.min);
+    const pct = span > 0 ? ((Number(input.value) - Number(input.min)) / span) * 100 : 0;
+    input.style.setProperty('--fill', `${pct}%`);
+  }
+
+  function syncVolumeUi() {
+    const level = muted ? 0 : volume;
+    ui.volume.value = String(level);
+    paintFill(ui.volume);
+    ui.vol.dataset.level = level === 0 ? '0' : level < 50 ? '1' : '2';
+    ui.mute.setAttribute('aria-label', muted ? 'Unmute' : 'Mute');
+  }
+
+  function applyVolume() {
+    audio.volume = volume / 100;
+    audio.muted = muted;
+    syncVolumeUi();
+    savePrefs();
+  }
+
+  function setStatus(text) {
+    hasStatus = true;
+    ui.artist.textContent = text;
+    ui.live.textContent = text;
+  }
+
+  function clearStatus() {
+    if (!hasStatus) return;
+    hasStatus = false;
+    ui.artist.textContent = shown.artist;
+    ui.live.textContent = '';
+  }
+
+  function setIntent(on) {
+    intent = on;
+    ui.root.classList.toggle('is-playing', on);
+    ui.play.setAttribute('aria-label', on ? 'Pause' : 'Play');
+  }
+
+  function setBusy(on) {
+    ui.root.classList.toggle('is-busy', on);
+  }
+
+  function syncProgress() {
+    if (seeking) return;
+    const known = phase === 'full' || phase === 'native';
+    const duration = known && Number.isFinite(audio.duration) ? audio.duration : 0;
+    const now = audio.currentTime || 0;
+    ui.seek.max = String(Math.floor(duration));
+    ui.seek.disabled = duration === 0;
+    ui.seek.value = String(Math.floor(now));
+    ui.cur.textContent = fmt(now);
+    ui.dur.textContent = duration ? fmt(duration) : '--:--';
+    paintFill(ui.seek);
+  }
+
+  function playNow() {
+    const attempt = audio.play();
+    if (attempt) {
+      attempt.catch((err) => {
+        // A swap to a new source interrupts a pending play() with an AbortError; that's not a refusal.
+        if (err.name === 'AbortError') return;
+        // The browser wanted a fresh click; the next press plays straight from the gesture.
+        setIntent(false);
+        setBusy(false);
+      });
+    }
+  }
+
+  function useBlob(blob, nextPhase) {
+    const previous = blobUrl;
+    blobUrl = URL.createObjectURL(blob);
+    phase = nextPhase;
+    audio.src = blobUrl;
+    if (previous) URL.revokeObjectURL(previous);
+  }
+
+  function onFirstChunk(blob) {
+    useBlob(blob, 'partial');
+    clearStatus();
+    if (intent) playNow();
+  }
+
+  // Swap the first minute for the whole file at the same position. Muting hides the splice.
+  function onFull(blob) {
+    const at = audio.currentTime || 0;
+    const resume = intent;
+    splicing = true;
+    audio.muted = true;
+    useBlob(blob, 'full');
+    audio.addEventListener('loadedmetadata', () => {
+      audio.currentTime = Math.min(at, Math.max(0, audio.duration - 0.1));
+      audio.muted = muted;
+      splicing = false;
+      if (resume) playNow();
+      syncProgress();
+    }, { once: true });
+  }
+
+  function onWholeFile(blob) {
+    useBlob(blob, 'full');
+    clearStatus();
+    if (intent) playNow();
+  }
+
+  function fail() {
+    phase = 'failed';
+    setIntent(false);
+    setBusy(false);
+    setStatus(MSG_FAILED);
+  }
+
+  // If fetch() can't be used (blocked, no CORS, no streams) let the browser stream the file itself.
+  function fallbackToNative() {
+    if (phase === 'native') { fail(); return; }
+    const at = phase === 'partial' ? audio.currentTime || 0 : 0;
+    phase = 'native';
+    splicing = true;
+    audio.src = MUSIC_URL;
+    audio.addEventListener('loadedmetadata', () => {
+      if (at) audio.currentTime = at;
+      splicing = false;
+      syncProgress();
+    }, { once: true });
+    clearStatus();
+    if (intent) playNow();
+  }
+
+  async function loadMusic() {
+    phase = 'loading';
+    try {
+      const res = await fetch(MUSIC_URL);
+      if (!res.ok || !res.body) throw new Error(`music request failed (${res.status})`);
+      const reader = res.body.getReader();
+      const parts = [];
+      let received = 0;
+      let startedEarly = false;
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        parts.push(value);
+        received += value.length;
+        if (!startedEarly && received >= FIRST_CHUNK_BYTES) {
+          startedEarly = true;
+          onFirstChunk(new Blob(parts, { type: MUSIC_MIME }));
+        }
+      }
+      const whole = new Blob(parts, { type: MUSIC_MIME });
+      if (startedEarly) onFull(whole);
+      else onWholeFile(whole);
+    } catch {
+      fallbackToNative();
+    }
+  }
+
+  audio.addEventListener('error', () => {
+    if (phase === 'idle' || phase === 'loading' || phase === 'failed') return;
+    if (phase === 'native') fail();
+    else fallbackToNative();
+  });
+  audio.addEventListener('waiting', () => intent && setBusy(true));
+  audio.addEventListener('playing', () => { setBusy(false); clearStatus(); });
+  audio.addEventListener('timeupdate', syncProgress);
+  audio.addEventListener('durationchange', syncProgress);
+  audio.addEventListener('pause', () => {
+    // a headset button or media key can pause the element behind our back
+    if (splicing || audio.ended || !['partial', 'full', 'native'].includes(phase)) return;
+    setIntent(false);
+    setBusy(false);
+  });
+  audio.addEventListener('ended', () => {
+    if (phase === 'partial') { setBusy(true); return; } // first minute is over, the rest is still arriving
+    if (phase !== 'full' && phase !== 'native') return;
+    setIntent(false);
+    audio.currentTime = 0;
+    syncProgress();
+  });
+
+  ui.play.addEventListener('click', () => {
+    if (phase === 'idle' || phase === 'failed') {
+      phase = 'idle';
+      audio.src = SILENT_WAV;
+      audio.play().catch(() => {});
+      setIntent(true);
+      setBusy(true);
+      setStatus(MSG_LOADING);
+      loadMusic();
+      return;
+    }
+    if (phase === 'loading') {
+      const on = !intent;
+      setIntent(on);
+      setBusy(on);
+      if (on) setStatus(MSG_LOADING);
+      else clearStatus();
+      return;
+    }
+    if (intent) {
+      audio.pause();
+      setIntent(false);
+      setBusy(false);
+    } else {
+      setIntent(true);
+      playNow();
+    }
+  });
+
+  ui.volume.addEventListener('input', () => {
+    volume = Number(ui.volume.value);
+    muted = volume === 0;
+    applyVolume();
+  });
+
+  ui.mute.addEventListener('click', () => {
+    if (muted && volume === 0) volume = DEFAULT_VOLUME;
+    muted = !muted;
+    applyVolume();
+  });
+
+  ui.seek.addEventListener('input', () => {
+    seeking = true;
+    ui.cur.textContent = fmt(ui.seek.value);
+    paintFill(ui.seek);
+  });
+
+  ui.seek.addEventListener('change', () => {
+    seeking = false;
+    if (phase === 'full' || phase === 'native') audio.currentTime = Number(ui.seek.value);
+  });
+
+  applyVolume();
+  paintFill(ui.seek);
+})();
+</script>
+</body>
+</html>
